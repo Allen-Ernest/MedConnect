@@ -103,47 +103,45 @@ class _ProfileState extends State<Profile> with Logic {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('MedConnect'),
-          centerTitle: true,
-          actions: <Widget>[
-            IconButton(onPressed: logout, icon: const Icon(Icons.logout))
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('MedConnect'),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(onPressed: logout, icon: const Icon(Icons.logout))
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: (){},
+                  child: const CircleAvatar(
+                    backgroundImage: AssetImage('assets/Albert.jpg'),
+                  ),
+                ),
+                const Text('Allen Ernest')
+              ],
+            ),
+            Text(token ?? 'Waiting for Token'),
+            ElevatedButton(
+                onPressed: () {
+                  fetchProfileData();
+                },
+                child: const Text('test headers')),
+            Text(userName),
+            Text(email),
+            Text(useroccupation),
+            Text(license),
+            Text(district),
+            Text(city),
+            Text(institution),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: (){},
-                    child: const CircleAvatar(
-                      backgroundImage: AssetImage('assets/Albert.jpg'),
-                    ),
-                  ),
-                  const Text('Allen Ernest')
-                ],
-              ),
-              Text(token ?? 'Waiting for Token'),
-              ElevatedButton(
-                  onPressed: () {
-                    fetchProfileData();
-                  },
-                  child: const Text('test headers')),
-              Text(userName),
-              Text(email),
-              Text(useroccupation),
-              Text(license),
-              Text(district),
-              Text(city),
-              Text(institution),
-            ],
-          ),
-        )
-      ),
+      )
     );
   }
 }
