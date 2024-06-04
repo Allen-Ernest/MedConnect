@@ -32,7 +32,12 @@ class _ProfileState extends State<Profile> with Logic {
   Future fetchProfileData() async {
     try {
       Map<String, dynamic> headers = {'Authorization': 'Bearer $token'};
-      Response response = await Dio().get('http://192.168.43.108:9000');
+      Response response = await Dio(
+        BaseOptions(
+          connectTimeout: const Duration(seconds: 5),
+          receiveTimeout: const Duration(seconds: 5),
+        )
+      ).get('http://192.168.43.108:9000');
       if (response.statusCode == 200) {
         Response response2 = await Dio().post(
             'http://192.168.43.108:9000/registerUser/profile',
@@ -49,7 +54,16 @@ class _ProfileState extends State<Profile> with Logic {
         });
       }
     } on DioException catch (error) {
-      debugPrint(error.message.toString());
+      debugPrint('Request time out');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Connection error'),
+          action: SnackBarAction(
+            label: 'Retry',
+            onPressed: fetchProfileData,
+          ),
+        ),
+      );
     }
   }
 
@@ -128,24 +142,7 @@ class _ProfileState extends State<Profile> with Logic {
               Text(institution),
             ],
           ),
-        ),bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.feed_rounded), label: 'Feed'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.search_off_rounded), label: 'Search'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_active_rounded),
-              label: 'Notifications'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.chat_rounded), label: 'Chats')
-        ],
-        onTap: _onItemTapped,
-        currentIndex: _selectedIndex,
-        selectedItemColor: const Color(0XFFFA69D3),
-      ),
-
+        )
       ),
     );
   }

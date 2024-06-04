@@ -53,22 +53,15 @@ class _UserLoginState extends State<UserLogin> with Logic {
           }
         }
       } on DioException catch (error) {
-        if (context.mounted) {
-          return AlertDialog(
-              content: Text(error.message.toString()),
-              actions: <Widget>[
-                IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.cancel_rounded)),
-                IconButton(
-                    onPressed: () {
-                      loginUser();
-                    },
-                    icon: const Icon(Icons.refresh_rounded))
-              ]);
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Connection error'),
+            action: SnackBarAction(
+              label: 'Retry',
+              onPressed: loginUser,
+            ),
+          ),
+        );
       }
     }
   }

@@ -67,29 +67,30 @@ class _NotificationsState extends State<Notifications> with Logic {
           ],
         ),
         drawer: Drawer(
-          backgroundColor: bgColor,
           child: ListView(children: <Widget>[
             DrawerHeader(
                 child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/Profile');
-                  },
-                  child: const CircleAvatar(
-                      radius: 40.0,
-                      backgroundImage: AssetImage('assets/doctor1.jpg')),
-                ),
-                const Text(
-                  'Allen Ernest',
-                  style: TextStyle(fontSize: 28, color: Colors.white),
-                ),
-                const Text(
-                  'Opthamologist',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-              ],
-            )),
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/Profile');
+                      },
+                      child: const CircleAvatar(
+                          radius: 40.0,
+                          backgroundImage: AssetImage('assets/doctor1.jpg')),
+                    ),
+                    const Text(
+                      'Allen Ernest',
+                      style: TextStyle(fontSize: 28),
+                    ),
+                    const Expanded(
+                      child: Text(
+                        'Ophthalmologist',
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ),
+                  ],
+                )),
             ListTile(
               onTap: () {},
               leading: const Icon(Icons.settings),
