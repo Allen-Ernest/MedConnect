@@ -10,6 +10,8 @@ import 'package:medconnect/settings.dart';
 import 'package:provider/provider.dart';
 import 'package:medconnect/test.dart';
 import 'package:medconnect/chat.dart';
+import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -74,9 +76,9 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-if (!kIsWeb){
-  await setupFlutterNotifications();
-}
+  if (!kIsWeb) {
+    await setupFlutterNotifications();
+  }
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => TokenProvider()),
@@ -99,6 +101,39 @@ class _MainAppState extends State<MainApp> {
   Future<String?> _getInitialRoute() async {
     String? token = await TokenStorage().getToken('jwtToken');
     return token != null ? '/Dashboard' : '/Login';
+  }
+
+  Future<void> _registerFCM() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    String? token = await messaging.getToken();
+    debugPrint("FCM Token: $token");
+    if (token != null){
+      await _storeTokenLocally(token);
+      sendTokenToServer(token);
+    }
+
+    //listen for token refresh
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
+      debugPrint('FCM Token refreshed: $newToken');
+      await _storeTokenLocally(newToken);
+      sendTokenToServer(newToken);
+    });
+  }
+
+  Future<void> _storeTokenLocally(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('fcmToken', token);
+  }
+
+  Future<void> sendTokenToServer(String token) async {
+    await Dio().get('http://192.168.43.107:9000');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _registerFCM();
   }
 
   @override
@@ -144,7 +179,7 @@ class _MainAppState extends State<MainApp> {
                   }
                   return const Scaffold(body: Center(child: Text('Error')));
                 },
-                '/Dashboard': (context) => const Dashboard(),
+                '/Dashboard': (context) => const Home(),
                 '/Profile': (context) => const Profile(),
                 '/settings': (context) => const AppSettings(),
                 '/Search': (context) => const Search(),

@@ -79,28 +79,6 @@ class Chats extends StatefulWidget {
 }
 
 class _ChatsState extends State<Chats> {
-  int _selectedIndex = 3;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      switch (index) {
-        case 0:
-          Navigator.pushNamed(context, '/Dashboard');
-          break;
-        case 1:
-          Navigator.pushNamed(context, '/Search');
-          break;
-        case 2:
-          Navigator.pushNamed(context, '/Notifications');
-          break;
-        case 3:
-          Navigator.pushNamed(context, '/Chat');
-          break;
-      }
-    });
-  }
-
   final userList = [
     UserModel(
         uid: '1',
@@ -138,49 +116,10 @@ class _ChatsState extends State<Chats> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-            title: const Text('Chats'),
-            actions: <Widget>[
-              IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.search_rounded))
-            ],
-            bottom: const TabBar(tabs: [
-              Tab(icon: Icon(Icons.chat)),
-              Tab(icon: Icon(Icons.groups)),
-            ])),
-        body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TabBarView(children: <Widget>[
-              const Tab(child: Text('Messaged chats will appear here')),
-              Tab(
-                  child: ListView.builder(
-                itemCount: userList.length,
-                itemBuilder: (context, index) =>
-                    UserItem(user: userList[index]),
-              )),
-            ])),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: Icon(Icons.feed_rounded), label: 'Feed'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.search_rounded), label: 'Search'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.notifications_active_rounded),
-                label: 'Notifications'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.chat_rounded), label: 'Chats')
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          selectedItemColor: Colors.red,
-        ),
-      ),
-    );
+    return ListView.builder(
+          itemCount: userList.length,
+          itemBuilder: (context, index) => UserItem(user: userList[index]),
+        );
   }
 }
 
